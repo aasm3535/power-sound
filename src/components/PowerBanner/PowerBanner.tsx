@@ -13,10 +13,27 @@ const track = new TrackPlayer({
 
 export default function PowerBanner() {
   const [isPlaying, setIsPlaying] = useState(false)
+  const [phase, setPhase] = useState<'idle' | 'out' | 'in'>('idle')
 
   const handleToggle = () => {
-    track.toggle()
-    setIsPlaying(!isPlaying)
+    if (phase !== 'idle') return
+
+    setPhase('out')
+
+    setTimeout(() => {
+      if (isPlaying) {
+        track.pause()
+      } else {
+        track.play()
+      }
+      setIsPlaying(!isPlaying)
+
+      setPhase('in')
+
+      setTimeout(() => {
+        setPhase('idle')
+      }, 350)
+    }, 350)
   }
 
   return (
@@ -26,7 +43,9 @@ export default function PowerBanner() {
         <img
           src={isPlaying ? '/stop.svg' : '/play.svg'}
           alt={isPlaying ? 'Stop' : 'Play'}
-          className="play-icon"
+          className={`play-icon ${
+            phase === 'out' ? 'blur-out' : phase === 'in' ? 'blur-in' : ''
+          }`}
         />
         Sound
       </h1>

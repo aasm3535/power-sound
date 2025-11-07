@@ -1,5 +1,5 @@
 import './HomePage.css'
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import ButtomSheet from '../components/ButtomSheet/ButtomSheet'
 import Avatar from '../components/Avatar/Avatar'
 import SortSelector from '../components/SortSelector/SortSelector'
@@ -9,25 +9,34 @@ import PowerBanner from '../components/PowerBanner/PowerBanner'
 import { TrackPlayer } from '../lib/TrackPlayer'
 import { getTrackInfo } from '../lib/TrackInfo'
 
-const track = new TrackPlayer({
-  id: '1',
-  title: 'Все хотят меня',
-  artist: 'gotlibgotlibgotlib',
-  src: '/gotlibgotlibgotlib - Все хотят меня.mp3',
-  cover: '/track.png'
-})
-
 export default function HomePage() {
   const videoRef = useRef<HTMLVideoElement>(null)
+  const [isPlaying, setIsPlaying] = useState(false)
+  const [trackPlayer] = useState(
+    () =>
+      new TrackPlayer({
+        id: '1',
+        title: 'Все хотят меня',
+        artist: 'gotlibgotlibgotlib',
+        src: '/gotlibgotlibgotlib - Все хотят меня.mp3',
+        cover: '/track.png'
+      })
+  )
 
   useEffect(() => {
     if (videoRef.current) {
       videoRef.current.playbackRate = 1.0
     }
-  }, [])
+
+    trackPlayer.setOnStateChange(setIsPlaying)
+
+    return () => {
+      trackPlayer.pause()
+    }
+  }, [trackPlayer])
 
   const sortOptions = ['Music', 'Hit', 'Popular']
-  const info = getTrackInfo(track)
+  const info = getTrackInfo(trackPlayer)
 
   return (
     <>
@@ -52,7 +61,7 @@ export default function HomePage() {
       </div>
 
       <Search />
-      <PowerBanner />
+      <PowerBanner trackPlayer={trackPlayer} isPlaying={isPlaying} />
       <BottomSort />
 
       <ButtomSheet>

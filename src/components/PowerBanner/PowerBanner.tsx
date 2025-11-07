@@ -1,39 +1,45 @@
-// components/PowerBanner.tsx
-import { useState } from 'react'
 import { TrackPlayer } from '../../lib/TrackPlayer'
 import './PowerBanner.css'
+import { useEffect, useRef } from 'react'
 
-const track = new TrackPlayer({
-  id: '1',
-  title: 'Все хотят меня',
-  artist: 'gotlibgotlibgotlib',
-  src: '/gotlibgotlibgotlib - Все хотят меня.mp3',
-  cover: '/track.png'
-})
+interface PowerBannerProps {
+  trackPlayer: TrackPlayer
+  isPlaying: boolean
+}
 
-export default function PowerBanner() {
-  const [isPlaying, setIsPlaying] = useState(false)
-  const [phase, setPhase] = useState<'idle' | 'out' | 'in'>('idle')
+export default function PowerBanner({ trackPlayer, isPlaying }: PowerBannerProps) {
+  const iconRef = useRef<HTMLImageElement>(null)
+  const isInitialMount = useRef(true)
+
+  useEffect(() => {
+    if (isInitialMount.current) {
+      isInitialMount.current = false
+      if (iconRef.current) {
+        iconRef.current.src = isPlaying ? '/stop.svg' : '/play.svg'
+      }
+      return
+    }
+
+    if (iconRef.current) {
+      iconRef.current.classList.add('blur-out')
+      setTimeout(() => {
+        if (iconRef.current) {
+          iconRef.current.src = isPlaying ? '/stop.svg' : '/play.svg'
+          iconRef.current.classList.remove('blur-out')
+          iconRef.current.classList.add('blur-in')
+
+          setTimeout(() => {
+            if (iconRef.current) {
+              iconRef.current.classList.remove('blur-in')
+            }
+          }, 350) // Длительность анимации
+        }
+      }, 350) // Длительность анимации
+    }
+  }, [isPlaying])
 
   const handleToggle = () => {
-    if (phase !== 'idle') return
-
-    setPhase('out')
-
-    setTimeout(() => {
-      if (isPlaying) {
-        track.pause()
-      } else {
-        track.play()
-      }
-      setIsPlaying(!isPlaying)
-
-      setPhase('in')
-
-      setTimeout(() => {
-        setPhase('idle')
-      }, 350)
-    }, 350)
+    trackPlayer.toggle()
   }
 
   return (
@@ -41,11 +47,9 @@ export default function PowerBanner() {
       <h1 className="power-title">
         Power
         <img
-          src={isPlaying ? '/stop.svg' : '/play.svg'}
+          ref={iconRef}
           alt={isPlaying ? 'Stop' : 'Play'}
-          className={`play-icon ${
-            phase === 'out' ? 'blur-out' : phase === 'in' ? 'blur-in' : ''
-          }`}
+          className={'play-icon'}
         />
         Sound
       </h1>

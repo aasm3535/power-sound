@@ -10,26 +10,44 @@ export type TrackMeta = {
 export class TrackPlayer {
   private audio: HTMLAudioElement
   private meta: TrackMeta
-  private isPlaying: boolean = false
+  public isPlaying: boolean = false
+  private onStateChange: (isPlaying: boolean) => void = () => {}
 
   constructor(meta: TrackMeta) {
     this.meta = meta
     this.audio = new Audio(meta.src)
     this.audio.preload = 'auto'
+
+    this.audio.onended = () => {
+      this.setIsPlaying(false)
+    }
   }
 
-play(volume: number = 0.4, fadeDuration: number = 500) {
-  this.audio.currentTime = 0
-  this.audio.volume = 0
-  void this.audio.play()
-  this.fadeIn(volume, fadeDuration)
-  this.isPlaying = true
-  this.updateMediaSession() // вот здесь
-}
+  setOnStateChange(callback: (isPlaying: boolean) => void) {
+    this.onStateChange = callback
+  }
+
+  private setIsPlaying(isPlaying: boolean) {
+    this.isPlaying = isPlaying
+    this.onStateChange(this.isPlaying)
+  }
+
+  play(volume: number = 0.4, fadeDuration: number = 500) {
+    if (!this.isPlaying) {
+      this.audio.currentTime = 0
+      this.audio.volume = 0
+      void this.audio.play()
+      this.fadeIn(volume, fadeDuration)
+      this.setIsPlaying(true)
+      this.updateMediaSession()
+    }
+  }
 
   pause(fadeDuration: number = 500) {
-    this.fadeOut(fadeDuration)
-    this.isPlaying = false
+    if (this.isPlaying) {
+      this.fadeOut(fadeDuration)
+      this.setIsPlaying(false)
+    }
   }
 
   toggle() {
@@ -41,26 +59,29 @@ play(volume: number = 0.4, fadeDuration: number = 500) {
   }
 
   updateMediaSession() {
-  if ('mediaSession' in navigator) {
-    navigator.mediaSession.metadata = new MediaMetadata({
-      title: this.meta.title,
-      artist: this.meta.artist,
-      album: 'Custom Album',
-      artwork: [
-        { src: this.meta.cover || '/track.png', sizes: '512x512', type: 'image/png' }
-      ]
-    })
+    if ('mediaSession' in navigator) {
+      navigator.mediaSession.metadata = new MediaMetadata({
+        title: this.meta.title,
+        artist: this.meta.artist,
+        album: 'Custom Album',
+        artwork: [
+          {
+            src: this.meta.cover || '/track.png',
+            sizes: '512x512',
+            type: 'image/png'
+          }
+        ]
+      })
 
-    // обработчики системных кнопок
-    navigator.mediaSession.setActionHandler('play', () => this.play())
-    navigator.mediaSession.setActionHandler('pause', () => this.pause())
-    navigator.mediaSession.setActionHandler('seekto', (details) => {
-      if (details.seekTime !== undefined) {
-        this.audio.currentTime = details.seekTime
-      }
-    })
+      navigator.mediaSession.setActionHandler('play', () => this.play())
+      navigator.mediaSession.setActionHandler('pause', () => this.pause())
+      navigator.mediaSession.setActionHandler('seekto', (details) => {
+        if (details.seekTime !== undefined) {
+          this.audio.currentTime = details.seekTime
+        }
+      })
+    }
   }
-}
 
   getMeta() {
     return this.meta
@@ -98,7 +119,6 @@ play(volume: number = 0.4, fadeDuration: number = 500) {
       if (currentStep >= steps) {
         clearInterval(interval)
         this.audio.pause()
-        this.audio.currentTime = 0
       }
     }, stepTime)
   }

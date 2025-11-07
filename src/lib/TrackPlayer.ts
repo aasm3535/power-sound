@@ -11,8 +11,10 @@ export class TrackPlayer {
   private audio: HTMLAudioElement
   private meta: TrackMeta
   public isPlaying: boolean = false
+  private isRepeating: boolean = false
   private onStateChange: (isPlaying: boolean) => void = () => {}
   private onTimeUpdate: () => void = () => {}
+  private onRepeatChange: (isRepeating: boolean) => void = () => {}
 
   constructor(meta: TrackMeta) {
     this.meta = meta
@@ -20,7 +22,12 @@ export class TrackPlayer {
     this.audio.preload = 'auto'
 
     this.audio.onended = () => {
-      this.setIsPlaying(false)
+      if (this.isRepeating) {
+        this.audio.currentTime = 0
+        void this.audio.play()
+      } else {
+        this.setIsPlaying(false)
+      }
     }
 
     this.audio.ontimeupdate = () => {
@@ -36,9 +43,22 @@ export class TrackPlayer {
     this.onTimeUpdate = callback
   }
 
+  setOnRepeatChange(callback: (isRepeating: boolean) => void) {
+    this.onRepeatChange = callback
+  }
+
   private setIsPlaying(isPlaying: boolean) {
     this.isPlaying = isPlaying
     this.onStateChange(this.isPlaying)
+  }
+
+  toggleRepeat() {
+    this.isRepeating = !this.isRepeating
+    this.onRepeatChange(this.isRepeating)
+  }
+
+  getIsRepeating() {
+    return this.isRepeating
   }
 
   play(volume: number = 0.4, fadeDuration: number = 500) {

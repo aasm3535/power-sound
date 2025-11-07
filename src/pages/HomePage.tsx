@@ -13,6 +13,7 @@ import TrackProgressBar from '../components/TrackProgressBar/TrackProgressBar'
 export default function HomePage() {
   const videoRef = useRef<HTMLVideoElement>(null)
   const [isPlaying, setIsPlaying] = useState(false)
+  const [isRepeating, setIsRepeating] = useState(false)
   const [trackPlayer] = useState(
     () =>
       new TrackPlayer({
@@ -30,6 +31,7 @@ export default function HomePage() {
     }
 
     trackPlayer.setOnStateChange(setIsPlaying)
+    trackPlayer.setOnRepeatChange(setIsRepeating)
 
     return () => {
       trackPlayer.pause()
@@ -66,14 +68,28 @@ export default function HomePage() {
       <BottomSort />
 
       <ButtomSheet>
-        <div className="track-block">
-          <img src="/track.png" alt="Track cover" className="track-cover" />
-          <div className="track-info">
-            <p className="track-title">{info.title}</p>
-            <p className="track-artist">{info.artist}</p>
+        {isPlaying ? (
+          <>
             <TrackProgressBar trackPlayer={trackPlayer} />
+            <div className="track-block">
+              <img src="/track.png" alt="Track cover" className="track-cover" />
+              <div className="track-info">
+                <p className="track-title">{info.title}</p>
+                <p className="track-artist">{info.artist}</p>
+              </div>
+              <button
+                className={`repeat-button ${isRepeating ? 'active' : ''}`}
+                onClick={() => trackPlayer.toggleRepeat()}
+              >
+                <img src="/repeat.svg" alt="Repeat" />
+              </button>
+            </div>
+          </>
+        ) : (
+          <div className="placeholder">
+            <p>No track selected</p>
           </div>
-        </div>
+        )}
       </ButtomSheet>
     </>
   )

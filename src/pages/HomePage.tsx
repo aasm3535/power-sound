@@ -8,6 +8,7 @@ import BottomSort from '../components/BottomSort/BottomSort'
 import PowerBanner from '../components/PowerBanner/PowerBanner'
 import { TrackPlayer } from '../lib/TrackPlayer'
 import { getTrackInfo } from '../lib/TrackInfo'
+import TrackProgressBar from '../components/TrackProgressBar/TrackProgressBar'
 
 export default function HomePage() {
   const videoRef = useRef<HTMLVideoElement>(null)
@@ -70,6 +71,7 @@ export default function HomePage() {
           <div className="track-info">
             <p className="track-title">{info.title}</p>
             <p className="track-artist">{info.artist}</p>
+            <TrackProgressBar trackPlayer={trackPlayer} />
           </div>
         </div>
       </ButtomSheet>

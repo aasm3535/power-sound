@@ -12,6 +12,7 @@ export class TrackPlayer {
   private meta: TrackMeta
   public isPlaying: boolean = false
   private onStateChange: (isPlaying: boolean) => void = () => {}
+  private onTimeUpdate: () => void = () => {}
 
   constructor(meta: TrackMeta) {
     this.meta = meta
@@ -21,10 +22,18 @@ export class TrackPlayer {
     this.audio.onended = () => {
       this.setIsPlaying(false)
     }
+
+    this.audio.ontimeupdate = () => {
+      this.onTimeUpdate()
+    }
   }
 
   setOnStateChange(callback: (isPlaying: boolean) => void) {
     this.onStateChange = callback
+  }
+
+  setOnTimeUpdate(callback: () => void) {
+    this.onTimeUpdate = callback
   }
 
   private setIsPlaying(isPlaying: boolean) {

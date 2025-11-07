@@ -9,7 +9,7 @@
 }
 
 .sort-option {
-  background: rgba(255, 255, 255, 0.25);
+  background: rgba(0, 0, 0, 0.50);
   backdrop-filter: blur(15px);
   border: none;
   border-radius: 50px;           

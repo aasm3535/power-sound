@@ -1,0 +1,16 @@
+.track-progress-bar.small {
+  width: 100%;
+  margin-top: 8px;
+}
+
+.track-progress-bar.small .progress-bar-container {
+  height: 6px;
+  background-color: rgba(255, 255, 255, 0.3);
+  border-radius: 3px;
+}
+
+.track-progress-bar.small .progress-bar {
+  height: 100%;
+  background-color: rgba(255, 255, 255, 0.7);
+  border-radius: 3px;
+}

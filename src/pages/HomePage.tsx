@@ -14,6 +14,9 @@ export default function HomePage() {
   const videoRef = useRef<HTMLVideoElement>(null)
   const [isPlaying, setIsPlaying] = useState(false)
   const [isRepeating, setIsRepeating] = useState(false)
+  const [showTrackBlock, setShowTrackBlock] = useState(false) // New state for track block visibility
+  const [trackBlockAnimationClass, setTrackBlockAnimationClass] = useState('') // New state for track block animation class
+
   const [trackPlayer] = useState(
     () =>
       new TrackPlayer({
@@ -37,6 +40,21 @@ export default function HomePage() {
       trackPlayer.pause()
     }
   }, [trackPlayer])
+
+  // Effect to manage track block appearance/disappearance animation
+  useEffect(() => {
+    if (isPlaying) {
+      setShowTrackBlock(true)
+      setTrackBlockAnimationClass('') // Reset animation class for entry
+    } else {
+      setTrackBlockAnimationClass('slideOutToBottom') // Apply exit animation
+      const timer = setTimeout(() => {
+        setShowTrackBlock(false) // Hide after animation completes
+        setTrackBlockAnimationClass('') // Clear class
+      }, 500) // Match animation duration
+      return () => clearTimeout(timer)
+    }
+  }, [isPlaying])
 
   const sortOptions = ['Music', 'Hit', 'Popular']
   const info = getTrackInfo(trackPlayer)
@@ -68,10 +86,10 @@ export default function HomePage() {
       <BottomSort />
 
       <ButtomSheet>
-        {isPlaying ? (
+        {showTrackBlock && ( // Conditionally render based on showTrackBlock
           <>
             <TrackProgressBar trackPlayer={trackPlayer} />
-            <div className="track-block">
+            <div className={`track-block ${trackBlockAnimationClass}`}> {/* Apply animation class */}
               <img src="/track.png" alt="Track cover" className="track-cover" />
               <div className="track-info">
                 <p className="track-title">{info.title}</p>
@@ -85,7 +103,8 @@ export default function HomePage() {
               </button>
             </div>
           </>
-        ) : (
+        )}
+        {!showTrackBlock && !isPlaying && ( // Show placeholder only when not playing and track block is hidden
           <div className="placeholder">
             <p>No track selected</p>
           </div>

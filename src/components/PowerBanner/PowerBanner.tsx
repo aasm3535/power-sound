@@ -1,6 +1,6 @@
 import { TrackPlayer } from '../../lib/TrackPlayer'
 import './PowerBanner.css'
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
 
 interface PowerBannerProps {
   trackPlayer: TrackPlayer
@@ -9,32 +9,21 @@ interface PowerBannerProps {
 
 export default function PowerBanner({ trackPlayer, isPlaying }: PowerBannerProps) {
   const iconRef = useRef<HTMLImageElement>(null)
-  const isInitialMount = useRef(true)
+  const [currentIconSrc, setCurrentIconSrc] = useState(isPlaying ? '/stop.svg' : '/play.svg')
+  const [animationClass, setAnimationClass] = useState('')
 
   useEffect(() => {
-    if (isInitialMount.current) {
-      isInitialMount.current = false
-      if (iconRef.current) {
-        iconRef.current.src = isPlaying ? '/stop.svg' : '/play.svg'
-      }
-      return
-    }
-
     if (iconRef.current) {
-      iconRef.current.classList.add('blur-out')
-      setTimeout(() => {
-        if (iconRef.current) {
-          iconRef.current.src = isPlaying ? '/stop.svg' : '/play.svg'
-          iconRef.current.classList.remove('blur-out')
-          iconRef.current.classList.add('blur-in')
-
-          setTimeout(() => {
-            if (iconRef.current) {
-              iconRef.current.classList.remove('blur-in')
-            }
-          }, 350) // Длительность анимации
-        }
+      setAnimationClass('blur-out')
+      const timeout1 = setTimeout(() => {
+        setCurrentIconSrc(isPlaying ? '/stop.svg' : '/play.svg')
+        setAnimationClass('blur-in')
+        const timeout2 = setTimeout(() => {
+          setAnimationClass('')
+        }, 350) // Длительность анимации
+        return () => clearTimeout(timeout2)
       }, 350) // Длительность анимации
+      return () => clearTimeout(timeout1)
     }
   }, [isPlaying])
 
@@ -48,8 +37,9 @@ export default function PowerBanner({ trackPlayer, isPlaying }: PowerBannerProps
         Power
         <img
           ref={iconRef}
+          src={currentIconSrc}
           alt={isPlaying ? 'Stop' : 'Play'}
-          className={'play-icon'}
+          className={`play-icon ${animationClass}`}
         />
         Sound
       </h1>

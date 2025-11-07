@@ -10,7 +10,7 @@
 
 .sort-option {
   background: rgba(255, 255, 255, 0.25);
-  backdrop-filter: blur(5px);
+  backdrop-filter: blur(15px);
   border: none;
   border-radius: 50px;           
   padding: 14px 22px;            

@@ -1,80 +1,22 @@
-import { useState, useRef } from 'react'
+// components/PowerBanner.tsx
+import { useState } from 'react'
+import { TrackPlayer } from '../../lib/TrackPlayer'
 import './PowerBanner.css'
+
+const track = new TrackPlayer({
+  id: '1',
+  title: 'Все хотят меня',
+  artist: 'gotlibgotlibgotlib',
+  src: '/gotlibgotlibgotlib - Все хотят меня.mp3',
+  cover: '/track.png'
+})
 
 export default function PowerBanner() {
   const [isPlaying, setIsPlaying] = useState(false)
-  const [phase, setPhase] = useState<'idle' | 'out' | 'in'>('idle')
-  const audioRef = useRef<HTMLAudioElement>(null)
-
-  const fadeInVolume = (targetVolume: number, duration: number) => {
-    if (!audioRef.current) return
-    audioRef.current.volume = 0
-    const steps = 20
-    const stepTime = duration / steps
-    let currentStep = 0
-
-    const interval = setInterval(() => {
-      currentStep++
-      const newVolume = (targetVolume / steps) * currentStep
-      if (audioRef.current) {
-        audioRef.current.volume = Math.min(newVolume, targetVolume)
-      }
-      if (currentStep >= steps) {
-        clearInterval(interval)
-      }
-    }, stepTime)
-  }
-
-  const fadeOutVolume = (duration: number) => {
-    if (!audioRef.current) return
-    const startVolume = audioRef.current.volume
-    const steps = 20
-    const stepTime = duration / steps
-    let currentStep = 0
-
-    const interval = setInterval(() => {
-      currentStep++
-      const newVolume = startVolume - (startVolume / steps) * currentStep
-      if (audioRef.current) {
-        audioRef.current.volume = Math.max(newVolume, 0)
-      }
-      if (currentStep >= steps) {
-        clearInterval(interval)
-        if (audioRef.current) {
-          audioRef.current.pause()
-          audioRef.current.currentTime = 0
-        }
-      }
-    }, stepTime)
-  }
 
   const handleToggle = () => {
-    if (phase !== 'idle') return
-
-    setPhase('out')
-
-    setTimeout(() => {
-      setIsPlaying(prev => {
-        const newState = !prev
-
-        if (newState) {
-          if (audioRef.current) {
-            audioRef.current.currentTime = 0
-            audioRef.current.play()
-            fadeInVolume(0.4, 500) 
-          }
-        } else {
-          fadeOutVolume(500) 
-        }
-
-        return newState
-      })
-      setPhase('in')
-
-      setTimeout(() => {
-        setPhase('idle')
-      }, 350)
-    }, 350)
+    track.toggle()
+    setIsPlaying(!isPlaying)
   }
 
   return (
@@ -84,14 +26,10 @@ export default function PowerBanner() {
         <img
           src={isPlaying ? '/stop.svg' : '/play.svg'}
           alt={isPlaying ? 'Stop' : 'Play'}
-          className={`play-icon ${
-            phase === 'out' ? 'blur-out' : phase === 'in' ? 'blur-in' : ''
-          }`}
+          className="play-icon"
         />
         Sound
       </h1>
-
-      <audio ref={audioRef} src="/gotlibgotlibgotlib - Все хотят меня.mp3" />
     </div>
   )
 }

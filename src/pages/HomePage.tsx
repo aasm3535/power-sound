@@ -20,7 +20,7 @@ export default function HomePage() {
   const [trackBlockAnimationClass, setTrackBlockAnimationClass] = useState('') 
 
   const [trackPlayer] = useState(
-    () => new TrackPlayer(tracks[0])
+    () => new TrackPlayer(tracks[1])
   )
 
   useEffect(() => {
@@ -73,8 +73,8 @@ export default function HomePage() {
         {showTrackBlock && ( 
           <>
             <TrackProgressBar trackPlayer={trackPlayer} />
-            <div className={`track-block ${trackBlockAnimationClass}`}> {/* Apply animation class */}
-              <img src="/track.png" alt="Track cover" className="track-cover" />
+            <div className={`track-block ${trackBlockAnimationClass}`}> 
+              <img src={info.cover} alt="Track cover" className="track-cover" />
               <div className="track-info">
                 <p className="track-title">{info.title}</p>
                 <p className="track-artist">{info.artist}</p>

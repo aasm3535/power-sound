@@ -7,5 +7,12 @@ export const tracks: TrackMeta[] = [
         artist: 'gotlibgotlibgotlib',
         src: '/gotlibgotlibgotlib - Все хотят меня.mp3',
         cover: '/track.png'
+    },
+    {
+        id: '2',
+        title: 'Aromat',
+        artist: 'gotlibgotlibgotlib',
+        src: '/Gotlibgotlibgotlib - Aromat.mp3',
+        cover: '/track2.jpg'
     }
 ]

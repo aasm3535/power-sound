@@ -7,7 +7,8 @@ export function getTrackInfo(player: TrackPlayer | null | undefined) {
       title: 'Unknown',
       artist: 'Unknown',
       duration: 0,
-      currentTime: 0
+      currentTime: 0,
+      cover: '/track.png'
     }
   }
   const meta = player.getMeta()
@@ -15,6 +16,7 @@ export function getTrackInfo(player: TrackPlayer | null | undefined) {
     title: meta.title,
     artist: meta.artist,
     duration: player.getDuration(),
-    currentTime: player.getCurrentTime()
+    currentTime: player.getCurrentTime(),
+    cover: meta.cover || '/track.png'
   }
 }

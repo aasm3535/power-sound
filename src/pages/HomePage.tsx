@@ -1,6 +1,6 @@
 
 import './HomePage.css'
-import { useEffect, useRef, useState  } from 'react'
+import { useEffect, useRef  } from 'react'
 import ButtomSheet from '../components/ButtomSheet/ButtomSheet'
 import Avatar from '../components/Avatar/Avatar'
 import SortSelector from '../components/SortSelector/SortSelector'
@@ -18,7 +18,6 @@ export default function HomePage() {
     }
     }, [])
 
-    const [setSortBy] = useState('Music')
 
     const sortOptions = ['Music', 'Hit', 'Popular']
 

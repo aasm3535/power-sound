@@ -10,6 +10,7 @@ import { TrackPlayer } from '../lib/TrackPlayer'
 import { getTrackInfo } from '../lib/TrackInfo'
 import TrackProgressBar from '../components/TrackProgressBar/TrackProgressBar'
 import BackgroundVideo from '../components/BackgroundVideo/BackgroundVideo'
+import { tracks } from '../lib/Tracks'
 
 export default function HomePage() {
   const videoRef = useRef<HTMLVideoElement>(null)
@@ -19,14 +20,7 @@ export default function HomePage() {
   const [trackBlockAnimationClass, setTrackBlockAnimationClass] = useState('') 
 
   const [trackPlayer] = useState(
-    () =>
-      new TrackPlayer({
-        id: '1',
-        title: 'Все хотят меня',
-        artist: 'gotlibgotlibgotlib',
-        src: '/gotlibgotlibgotlib - Все хотят меня.mp3',
-        cover: '/track.png'
-      })
+    () => new TrackPlayer(tracks[0])
   )
 
   useEffect(() => {
@@ -42,7 +36,6 @@ export default function HomePage() {
     }
   }, [trackPlayer])
 
-  
   useEffect(() => {
     if (isPlaying) {
       setShowTrackBlock(true)

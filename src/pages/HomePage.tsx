@@ -9,13 +9,14 @@ import PowerBanner from '../components/PowerBanner/PowerBanner'
 import { TrackPlayer } from '../lib/TrackPlayer'
 import { getTrackInfo } from '../lib/TrackInfo'
 import TrackProgressBar from '../components/TrackProgressBar/TrackProgressBar'
+import BackgroundVideo from '../components/BackgroundVideo/BackgroundVideo'
 
 export default function HomePage() {
   const videoRef = useRef<HTMLVideoElement>(null)
   const [isPlaying, setIsPlaying] = useState(false)
   const [isRepeating, setIsRepeating] = useState(false)
-  const [showTrackBlock, setShowTrackBlock] = useState(false) // New state for track block visibility
-  const [trackBlockAnimationClass, setTrackBlockAnimationClass] = useState('') // New state for track block animation class
+  const [showTrackBlock, setShowTrackBlock] = useState(false) 
+  const [trackBlockAnimationClass, setTrackBlockAnimationClass] = useState('') 
 
   const [trackPlayer] = useState(
     () =>
@@ -41,17 +42,17 @@ export default function HomePage() {
     }
   }, [trackPlayer])
 
-  // Effect to manage track block appearance/disappearance animation
+  
   useEffect(() => {
     if (isPlaying) {
       setShowTrackBlock(true)
-      setTrackBlockAnimationClass('') // Reset animation class for entry
+      setTrackBlockAnimationClass('') 
     } else {
-      setTrackBlockAnimationClass('slideOutToBottom') // Apply exit animation
+      setTrackBlockAnimationClass('slideOutToBottom') 
       const timer = setTimeout(() => {
-        setShowTrackBlock(false) // Hide after animation completes
-        setTrackBlockAnimationClass('') // Clear class
-      }, 500) // Match animation duration
+        setShowTrackBlock(false) 
+        setTrackBlockAnimationClass('') 
+      }, 500) 
       return () => clearTimeout(timer)
     }
   }, [isPlaying])
@@ -61,17 +62,7 @@ export default function HomePage() {
 
   return (
     <>
-      <video
-        ref={videoRef}
-        autoPlay
-        muted
-        loop
-        playsInline
-        className="background-video"
-      >
-        <source src="/power-sound-bg.mp4" type="video/mp4" />
-        Your browser does not support the video tag.
-      </video>
+      <BackgroundVideo />
 
       <div className="avatar-wrapper">
         <Avatar src="/avatar.jpg" size={40} />
@@ -86,7 +77,7 @@ export default function HomePage() {
       <BottomSort />
 
       <ButtomSheet>
-        {showTrackBlock && ( // Conditionally render based on showTrackBlock
+        {showTrackBlock && ( 
           <>
             <TrackProgressBar trackPlayer={trackPlayer} />
             <div className={`track-block ${trackBlockAnimationClass}`}> {/* Apply animation class */}
@@ -104,7 +95,7 @@ export default function HomePage() {
             </div>
           </>
         )}
-        {!showTrackBlock && !isPlaying && ( // Show placeholder only when not playing and track block is hidden
+        {!showTrackBlock && !isPlaying && ( 
           <div className="placeholder">
             <p>No track selected</p>
           </div>

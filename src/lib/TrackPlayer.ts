@@ -18,13 +18,14 @@ export class TrackPlayer {
     this.audio.preload = 'auto'
   }
 
-  play(volume: number = 0.4, fadeDuration: number = 500) {
-    this.audio.currentTime = 0
-    this.audio.volume = 0
-    this.audio.play()
-    this.fadeIn(volume, fadeDuration)
-    this.isPlaying = true
-  }
+play(volume: number = 0.4, fadeDuration: number = 500) {
+  this.audio.currentTime = 0
+  this.audio.volume = 0
+  void this.audio.play()
+  this.fadeIn(volume, fadeDuration)
+  this.isPlaying = true
+  this.updateMediaSession() // вот здесь
+}
 
   pause(fadeDuration: number = 500) {
     this.fadeOut(fadeDuration)
@@ -38,6 +39,28 @@ export class TrackPlayer {
       this.play()
     }
   }
+
+  updateMediaSession() {
+  if ('mediaSession' in navigator) {
+    navigator.mediaSession.metadata = new MediaMetadata({
+      title: this.meta.title,
+      artist: this.meta.artist,
+      album: 'Custom Album',
+      artwork: [
+        { src: this.meta.cover || '/track.png', sizes: '512x512', type: 'image/png' }
+      ]
+    })
+
+    // обработчики системных кнопок
+    navigator.mediaSession.setActionHandler('play', () => this.play())
+    navigator.mediaSession.setActionHandler('pause', () => this.pause())
+    navigator.mediaSession.setActionHandler('seekto', (details) => {
+      if (details.seekTime !== undefined) {
+        this.audio.currentTime = details.seekTime
+      }
+    })
+  }
+}
 
   getMeta() {
     return this.meta

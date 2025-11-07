@@ -16,39 +16,57 @@ export default function HomePage() {
   const videoRef = useRef<HTMLVideoElement>(null)
   const [isPlaying, setIsPlaying] = useState(false)
   const [isRepeating, setIsRepeating] = useState(false)
-  const [showTrackBlock, setShowTrackBlock] = useState(false) 
-  const [trackBlockAnimationClass, setTrackBlockAnimationClass] = useState('') 
+  const [showTrackBlock, setShowTrackBlock] = useState(false)
+  const [trackBlockAnimationClass, setTrackBlockAnimationClass] = useState('')
 
-  const [trackPlayer] = useState(
-    () => new TrackPlayer(tracks[1])
-  )
+  const [currentIndex, setCurrentIndex] = useState(0)
+  const [trackPlayer, setTrackPlayer] = useState(() => new TrackPlayer(tracks[0]))
 
-  useEffect(() => {
-    if (videoRef.current) {
-      videoRef.current.playbackRate = 1.0
-    }
+useEffect(() => {
+  if (videoRef.current) {
+    videoRef.current.playbackRate = 1.0
+  }
 
-    trackPlayer.setOnStateChange(setIsPlaying)
-    trackPlayer.setOnRepeatChange(setIsRepeating)
+  trackPlayer.setOnStateChange(setIsPlaying)
+  trackPlayer.setOnRepeatChange(setIsRepeating)
 
-    return () => {
-      trackPlayer.pause()
-    }
-  }, [trackPlayer])
-
-  useEffect(() => {
-    if (isPlaying) {
-      setShowTrackBlock(true)
-      setTrackBlockAnimationClass('') 
+  trackPlayer['audio'].onended = () => {
+    if (isRepeating) {
+      trackPlayer.play()
     } else {
-      setTrackBlockAnimationClass('slideOutToBottom') 
+      const nextIndex = (currentIndex + 1) % tracks.length
+      const nextTrack = new TrackPlayer(tracks[nextIndex])
+      setTrackPlayer(nextTrack)
+      setCurrentIndex(nextIndex)
+      nextTrack.play()
+
+      
+      setShowTrackBlock(true)
+      setTrackBlockAnimationClass('')
+    }
+  }
+
+  return () => {
+    trackPlayer.pause()
+  }
+}, [trackPlayer, currentIndex, isRepeating])
+
+useEffect(() => {
+  if (isPlaying) {
+    setShowTrackBlock(true)
+    setTrackBlockAnimationClass('')
+  } else {
+    
+    if (!trackPlayer.isPlaying) {
+      setTrackBlockAnimationClass('slideOutToBottom')
       const timer = setTimeout(() => {
-        setShowTrackBlock(false) 
-        setTrackBlockAnimationClass('') 
-      }, 500) 
+        setShowTrackBlock(false)
+        setTrackBlockAnimationClass('')
+      }, 500)
       return () => clearTimeout(timer)
     }
-  }, [isPlaying])
+  }
+}, [isPlaying, trackPlayer])
 
   const sortOptions = ['Music', 'Hit', 'Popular']
   const info = getTrackInfo(trackPlayer)
@@ -70,10 +88,10 @@ export default function HomePage() {
       <BottomSort />
 
       <ButtomSheet>
-        {showTrackBlock && ( 
+        {showTrackBlock && (
           <>
             <TrackProgressBar trackPlayer={trackPlayer} />
-            <div className={`track-block ${trackBlockAnimationClass}`}> 
+            <div className={`track-block ${trackBlockAnimationClass}`}>
               <img src={info.cover} alt="Track cover" className="track-cover" />
               <div className="track-info">
                 <p className="track-title">{info.title}</p>
@@ -88,7 +106,7 @@ export default function HomePage() {
             </div>
           </>
         )}
-        {!showTrackBlock && !isPlaying && ( 
+        {!showTrackBlock && !isPlaying && (
           <div className="placeholder">
             <p>No track selected</p>
           </div>

@@ -1,13 +1,13 @@
 .search-icon-wrapper {
   position: fixed;
-  top: 25px;     /* 👈 Поднимаем чуть выше */
-  right: 20px;   /* 👈 Отступ справа */
+  top: 25px;    
+  right: 20px;  
   z-index: 10;
 }
 
 .search-icon-fat {
   width: 40px;
   height: 40px;
-  filter: brightness(10); /* белая иконка */
+  filter: brightness(10);
   cursor: pointer;
 }

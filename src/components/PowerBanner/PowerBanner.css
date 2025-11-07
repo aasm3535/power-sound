@@ -1,6 +1,6 @@
 .power-banner {
   position: absolute;
-  top: calc(50vh - var(--sheet-height) / 2 - 120px);
+  top: calc(50vh - var(--sheet-height) / 2 - 90px);
   left: 50%;
   transform: translateX(-50%);
   text-align: center;

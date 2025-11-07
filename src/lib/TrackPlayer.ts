@@ -21,14 +21,16 @@ export class TrackPlayer {
     this.audio = new Audio(meta.src)
     this.audio.preload = 'auto'
 
-    this.audio.onended = () => {
-      if (this.isRepeating) {
-        this.audio.currentTime = 0
-        void this.audio.play()
-      } else {
-        this.setIsPlaying(false)
-      }
-    }
+this.audio.onended = () => {
+  if (this.isRepeating) {
+    this.audio.currentTime = 0
+    void this.audio.play()
+    this.setIsPlaying(true)
+  } else {
+    this.setIsPlaying(false)
+  }
+}
+
 
     this.audio.ontimeupdate = () => {
       this.onTimeUpdate()

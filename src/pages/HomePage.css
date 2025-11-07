@@ -1,29 +1,6 @@
 :root {
   --sheet-height: 60px;
 }
-
-
-.background-video {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  object-fit: cover;
-  z-index: -1;
-}
-
-.background-video::after {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0, 0, 0, 0.4);
-}
-
-
 .avatar-wrapper {
   position: fixed;
   top: 20px;
@@ -39,7 +16,6 @@
   transform: translateX(-50%);
   z-index: 10;
 }
-
 
 .track-block {
   display: flex;
@@ -140,5 +116,27 @@
 }
 
 .repeat-button:active img {
+  transform: scale(0.9);
+}
+
+.controls {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end; /* кнопки смещены вправо */
+  gap: 12px;
+  flex: 1;
+}
+
+.control-button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.control-button:active {
   transform: scale(0.9);
 }

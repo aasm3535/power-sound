@@ -18,5 +18,41 @@ export const tracks: VibeTrack[] = [
     cover: '/track2.jpg',
     likes: 0,
     plays: 0
+  },
+  {
+    id: '3',
+    title: 'ayaz',
+    artist: 'europesatan',
+    src: '/europesatan-ayaz.mp3',
+    cover: '/europesatan.jpg',
+    likes: 0,
+    plays: 0
+  },
+  {
+    id: '4',
+    title: 'нарцисс',
+    artist: 'europesatan',
+    src: '/europesatan-narciss.mp3',
+    cover: '/europesatan.jpg',
+    likes: 0,
+    plays: 0
+  },
+  {
+    id: '5',
+    title: 'заткнись',
+    artist: 'europesatan',
+    src: '/europesatan-zatknis.mp3',
+    cover: '/europesatan.jpg',
+    likes: 0,
+    plays: 0
+  },
+  {
+    id: '6',
+    title: 'Снова я напиваюсь',
+    artist: 'Slava Marlow',
+    src: '/Slava Marlow - Снова Я Напиваюсь.mp3',
+    cover: '/snovanapivaij.png',
+    likes: 0,
+    plays: 0
   }
 ]

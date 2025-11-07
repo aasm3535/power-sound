@@ -20,9 +20,9 @@ export default function PowerBanner({ trackPlayer, isPlaying }: PowerBannerProps
         setAnimationClass('blur-in')
         const timeout2 = setTimeout(() => {
           setAnimationClass('')
-        }, 350) // Длительность анимации
+        }, 350) 
         return () => clearTimeout(timeout2)
-      }, 350) // Длительность анимации
+      }, 350) 
       return () => clearTimeout(timeout1)
     }
   }, [isPlaying])
@@ -34,14 +34,14 @@ export default function PowerBanner({ trackPlayer, isPlaying }: PowerBannerProps
   return (
     <div className="power-banner" onClick={handleToggle}>
       <h1 className="power-title">
-        Power
+      My
         <img
           ref={iconRef}
           src={currentIconSrc}
           alt={isPlaying ? 'Stop' : 'Play'}
           className={`play-icon ${animationClass}`}
         />
-        Sound
+        Vibe
       </h1>
     </div>
   )

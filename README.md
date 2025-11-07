@@ -4,7 +4,7 @@ Modern, minimalistic web-player for discovering and listening to music from our 
 
 ## Preview
 
-<img width="611" height="1014" alt="image" src="https://github.com/user-attachments/assets/e43992f3-0692-4329-85e5-742fa7eb3cd8" />
+<img width="300" alt="Power Sound preview" src="https://github.com/user-attachments/assets/e43992f3-0692-4329-85e5-742fa7eb3cd8" />
 
 ## Features
 

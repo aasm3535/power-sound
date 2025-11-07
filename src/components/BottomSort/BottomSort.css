@@ -1,6 +1,6 @@
 .bottom-sort {
   position: absolute;
-  bottom: calc(var(--sheet-height) + 90px);
+  bottom: calc(var(--sheet-height) + 70px);
   left: 50%;
   transform: translateX(-50%);
   display: flex;
